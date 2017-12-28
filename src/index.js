@@ -62,26 +62,26 @@ var parseXmlString = function(str) {
 	return null;
 }
 
-var validation = function(element, depth, parentTag) {
-	if (depth > 2 || element.tagName === parentTag) {
+var validation = function(root, depth) {
+	if (depth > 2) {
 		return false;
 	}
 
-	var child = element.firstElementChild;
+	var child = root.firstElementChild;
 	var siblingTag = "";
 
-	parentTag = element.tagName;
+	parentTag = root.tagName;
 	while (child) {
-		if (child.tagName === siblingTag) {
+		if (child.tagName === parentTag || child.tagName === siblingTag) {
 			return false;
 		}
 
-		if (child.childNodes && !validation(child, depth + 1, parentTag)) {
+		if (child.childNodes && !validation(child, depth + 1)) {
 			return false;
 		}
 
 		siblingTag = child.tagName;
-		child = child.nextSibling;
+		child = child.nextElementSibling;
 	}
 
 	return true;
